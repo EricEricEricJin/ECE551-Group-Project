@@ -1,6 +1,6 @@
 module MazeRunner_tb();
 
-  << optional include or import >>
+  // << optional include or import >>
   
   reg clk,RST_n;
   reg send_cmd;					// assert to send command to MazeRunner_tb
@@ -50,9 +50,18 @@ module MazeRunner_tb();
 	
 					 
   initial begin
-	batt = 12'hDA0;  	// this is value to use with RunnerPhysics
-    << Your magic goes here >>
-	
+	  batt = 12'hDA0;  	// this is value to use with RunnerPhysics
+    // << Your magic goes here >>
+    clk = 0;
+
+    // Reset
+    RST_n = 0;
+    repeat(2) @(posedge clk) RST_n = 1;
+
+    // wait for some time
+    repeat(10000) @(posedge clk);
+    $stop();
+
   end
   
   always
