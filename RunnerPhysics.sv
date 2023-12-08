@@ -156,11 +156,12 @@ module RunnerPhysics(clk,RST_n,SS_n,SCLK,MISO,MOSI,INT,lftPWM1,lftPWM2,rghtPWM1,
 	yy = 15'h800;			// start 0.5 squares up.
 	magnet_pos_xx = 7'h38;	// magnet pos is middle of (3,3)
 	magnet_pos_yy = 7'h38;
-	mazeModel[0][0] = 4'h5;	// SW
-	mazeModel[1][0] = 4'h6;	// SE
-	mazeModel[2][0] = 4'h3;	// EW
-	mazeModel[3][0] = 4'h7;	// SEW
-	mazeModel[0][1] = 4'h3;	// EW
+	// 4-bit shows direction of wall, in [ N S E W ]
+	mazeModel[0][0] = 4'h5;	// SW 0101
+	mazeModel[1][0] = 4'h6;	// SE 0110
+	mazeModel[2][0] = 4'h3;	// EW 0011
+	mazeModel[3][0] = 4'h7;	// SEW 0111
+	mazeModel[0][1] = 4'h3;	// EW 
 	mazeModel[1][1] = 4'h1;	// W
 	mazeModel[2][1] = 4'hA;	// NE
 	mazeModel[3][1] = 4'h3;	// EW
