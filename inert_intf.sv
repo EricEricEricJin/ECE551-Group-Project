@@ -75,7 +75,7 @@ module inert_intf(clk,rst_n,strt_cal,cal_done,heading,rdy,IR_Dtrm,
   //////////////////////////////////////////////////////////
   SPI_mnrch iSPI(.clk(clk),.rst_n(rst_n),.SS_n(SS_n),.SCLK(SCLK),
                  .MISO(MISO),.MOSI(MOSI),.wrt(wrt),.done(done),
-				 .rd_data(inert_data),.wt_data(cmd));
+				 .rd_data(inert_data),.wrt_data(cmd));
 				  
   ////////////////////////////////////////////////////////////////////
   // Instantiate Angle Engine that takes in angular rate readings  //
