@@ -50,17 +50,71 @@ module MazeRunner_tb();
 	
 					 
   initial begin
-	  batt = 12'hDA0;  	// this is value to use with RunnerPhysics
-    // << Your magic goes here >>
-    clk = 0;
+	batt = 12'hDA0;  	// this is value to use with RunnerPhysics
+    	// << Your magic goes here >>
+    	clk = 0;
 
-    // Reset
-    RST_n = 0;
-    repeat(2) @(posedge clk) RST_n = 1;
+    	// Reset
+    	RST_n = 0;
+	repeat(2) @(posedge clk) RST_n = 1;
+	
+	// wait for some time
+	repeat(10000) @(posedge clk);
+	
+	// send calibration cmd, check to make sure that the calabration was sucessful
+	cmd = 16'h0000;
+	send_cmd = 1;
+	@(posedge clk) send_cmd = 0;
+	fork
+		begin: cal_timeout
+			repeat(1500000) @(posedge clk);
+			$display("ERR: timed out waiting for cal_done");
+			$stop();
+		end
+		begin
+			@(posedge iDUT.iNEMO.cal_done);
+			$display("Calibration completed successfully!");
+			disable cal_timeout;
+		end
+	join
+	// check to make sure that the cmd was ack'd
+	fork
+		begin: ack_timeout
+			repeat(1500000) @(posedge clk);
+			$display("ERR: timed out waiting for postive ack");
+			$stop();
+		end
+		begin
+			@(posedge resp_rdy);
+			if(resp == 8'ha5) begin
+				$display("cmd was acknowledged correctly!");
+			end else begin
+				$display("cmd was incorrectly acknowledged, should have been 8'ha5 but was 8'h%h", resp);
+			end
+			disable ack_timeout;
+		end
+	join
+	// send er'
+	cmd = 16'h6000;
+	send_cmd = 1;
+	@(posedge clk) send_cmd = 0;
+	// wait for some time to see what happens
+	// repeat(1000000) @(posedge clk);
 
-    // wait for some time
-    repeat(10000) @(posedge clk);
-    $stop();
+	// check for solve complete
+	fork
+		begin: timeout
+			repeat(10_000_000) @(posedge clk);
+			$display("ERR: timed out waiting for postive ack");
+			$stop();
+		end
+		begin
+			@(posedge iDUT.iSLV.sol_cmplt);
+			$display("sol_cmplt assert!");
+			disable timeout;
+		end
+	join
+	$stop();
 
   end
   

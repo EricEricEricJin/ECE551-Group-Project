@@ -57,7 +57,7 @@ always_comb begin
     nxt_state = state;
     case (state)
         IDLE: begin
-            if (cmd_md) begin
+            if (!cmd_md) begin
                 nxt_state = FWD;
                 strt_mv = 1;
             end
@@ -86,6 +86,7 @@ always_comb begin
         end
         default: begin // WAIT_HDG
             if (mv_cmplt) begin
+		strt_mv = 1;
                 nxt_state = FWD;
             end
         end

@@ -58,10 +58,11 @@ always_comb begin
 			end
 		end
 		// wait for the second byte to transmit and when finsished return the idle state
-		BYTE_TWO: if(tx_done) begin
+		BYTE_TWO:
+			if(tx_done) begin
 			    set_cmd_snt = 1;
 			    nxt_state = IDLE;
-		end
+			end
 	endcase
 end
 
