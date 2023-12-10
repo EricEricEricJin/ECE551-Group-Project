@@ -1,96 +1,74 @@
-`default_nettype none
-
 module RemoteComm(clk, rst_n, RX, TX, cmd, send_cmd, cmd_sent, resp_rdy, resp);
 
-    input wire clk, rst_n;		// clock and active low reset
-    input wire RX;				// serial data input
-    input wire send_cmd;			// indicates to tranmit 24-bit command (cmd)
-    input wire [15:0] cmd;		// 16-bit command
+input clk, rst_n;		// clock and active low reset
+input RX;			// serial data input
+input send_cmd;			// indicates to tranmit 24-bit command (cmd)
+input [15:0] cmd;		// 16-bit command
 
-    output wire TX;				// serial data output
-    output reg cmd_sent;		// indicates transmission of command complete
-    output wire resp_rdy;		// indicates 8-bit response has been received
-    output wire [7:0] resp;		// 8-bit response from DUT
+output logic TX;		// serial data output
+output logic cmd_sent;		// indicates transmission of command complete
+output logic resp_rdy;		// indicates 8-bit response has been received
+output logic [7:0] resp;	// 8-bit response from DUT
 
-    // << SM output commands >>
-    reg trmt, sel;
+typedef enum logic [1:0] {IDLE, BYTE_ONE, BYTE_TWO} state_t;
 
-    // << cmd_sent SRFF >>
-    reg cmd_sent_set;
-    always_ff @(posedge clk, negedge rst_n) begin
-        if (!rst_n) cmd_sent <= 0;
-        else if (cmd_sent_set) cmd_sent <= 1;
-        else if (send_cmd) cmd_sent <= 0;
-    end
+logic sel_high, trmt, set_cmd_snt, tx_done;
+logic[7:0] low_byte, tx_data;
 
-    // << TX data and TX done >>
-    wire tx_done;
-    wire [7:0] tx_data;
-    reg [7:0] cmd_low_8;
-    always_ff @(posedge clk, negedge rst_n) begin
-        if (!rst_n) cmd_low_8 <= 8'b0;
-        else if (send_cmd) cmd_low_8 <= cmd[7:0];
-    end
-    assign tx_data = sel ? cmd[15:8] : cmd_low_8;
+///////////////////////////////////////////////
+// Instantiate basic 8-bit UART transceiver //
+/////////////////////////////////////////////
+UART iUART(.clk(clk), .rst_n(rst_n), .RX(RX), .TX(TX), .tx_data(tx_data), .trmt(trmt),
+           .tx_done(tx_done), .rx_data(resp), .rx_rdy(resp_rdy), .clr_rx_rdy(resp_rdy));
 
+// keep low byte perseved
+always_ff@(posedge clk) begin
+	if(send_cmd) low_byte <= cmd[7:0];
+end
 
-    ///////////////////////////////////////////////
-    // Instantiate basic 8-bit UART transceiver //
-    /////////////////////////////////////////////
-    UART iUART(.clk(clk), .rst_n(rst_n), .RX(RX), .TX(TX), .tx_data(tx_data), .trmt(trmt),
-            .tx_done(tx_done), .rx_data(resp), .rx_rdy(resp_rdy), .clr_rx_rdy(resp_rdy));
+// select weither we transmit the high or the low byte
+assign tx_data = sel_high ? cmd[15:8] : low_byte;
 
-    //////////////////////
-    // Implement the SM //
-    //////////////////////
-    typedef enum reg[1:0] { IDLE, TB1, TB2 } state_t;
-    state_t state, nxt_state;
+state_t state, nxt_state;
 
-    always_ff @(posedge clk, negedge rst_n) begin
-        if (!rst_n)
-            state <= IDLE;
-        else
-            state <= nxt_state;
-    end
+// state machine flip flop
+always_ff@(posedge clk, negedge rst_n) begin
+	if(!rst_n) state <= IDLE;
+	else state <= nxt_state;
+end
 
-    reg tx_done_delayed;
-    wire tx_rise;
-    always_ff @(posedge clk, negedge rst_n) begin
-        if (!rst_n) 
-            tx_done_delayed <= 0;
-        else
-            tx_done_delayed <= tx_done;
-    end
-    assign tx_rise = (!tx_done_delayed) && tx_done;
+always_comb begin
+	trmt = 0;
+	set_cmd_snt = 0;
+	sel_high = 1'b1;
+	nxt_state = state;
+	case(state)
+		// wait for the signal to send the command
+		IDLE: if(send_cmd) begin
+		      	trmt = 1;
+			nxt_state = BYTE_ONE;
+		end
+		// ensure that the lwo byte is now being selected to be transmitted and wait until the high byte finsihes transmitting
+		BYTE_ONE: begin
+			sel_high = 0;
+			if(tx_done) begin
+				nxt_state = BYTE_TWO;
+				sel_high = 0;
+				trmt = 1;
+			end
+		end
+		// wait for the second byte to transmit and when finsished return the idle state
+		BYTE_TWO: if(tx_done) begin
+			    set_cmd_snt = 1;
+			    nxt_state = IDLE;
+		end
+	endcase
+end
 
-    always_comb begin
-        trmt = 0;
-        sel = 0;
-        cmd_sent_set = 0;
-        
-        nxt_state = state;
-
-        case (state)
-            IDLE: begin
-                if (send_cmd) begin
-                    trmt = 1;
-                    sel = 1;
-                    nxt_state = TB1;
-                end 
-            end 
-            TB1: begin
-                if (tx_rise) begin
-                    trmt = 1;
-                    nxt_state = TB2;
-                end
-            end 
-            default: begin // TB2
-                if (tx_rise) begin
-                    cmd_sent_set = 1;
-                    nxt_state = IDLE;
-                end
-            end 
-        endcase
-    end
+// set reset output flop
+always_ff@(posedge clk, negedge rst_n) begin
+	if(send_cmd) cmd_sent <= 0;
+	else if(set_cmd_snt) cmd_sent <= 1'b1;
+end
 
 endmodule	
