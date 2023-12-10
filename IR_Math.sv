@@ -24,10 +24,10 @@ assign mux_out_2 = lft_opn ? n_r_diff : mux_out_1;
 assign mux_out_3 = (lft_opn && rght_opn) ? 12'h000 : mux_out_2;
 
 wire signed [12:0] div32_ext13_out;
-assign div32_ext13_out = {{6{mux_out_3[11]}}, {mux_out_3 >> 5}[6:0]};
+assign div32_ext13_out = {{6{mux_out_3[11]}}, mux_out_3[11:5]};
 
 wire signed [12:0] x4_ext13_out;
-assign x4_ext13_out = {{4{IR_Dtrm[8]}}, {2'b00, IR_Dtrm} << 2};
+assign x4_ext13_out = {{2{IR_Dtrm[8]}}, IR_Dtrm, 2'b0};
 
 wire signed [12:0] last_sum_in_1;
 assign last_sum_in_1 = (div32_ext13_out + x4_ext13_out) >> 1;
