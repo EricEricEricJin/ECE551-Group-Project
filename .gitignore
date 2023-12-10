@@ -1,3 +1,4 @@
 *
 !*.sv
 !.gitignore
+!wave.do
