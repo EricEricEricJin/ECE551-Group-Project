@@ -87,22 +87,30 @@ module PID(
     input wire [11:0] actl_hdng,
     input wire hdng_vld,
     input wire [10:0] frwrd_spd,
-
-    output wire at_hdng,
-    output wire [11:0] lft_spd,
-    output wire [11:0] rght_spd
+    output logic at_hdng,
+    output logic [11:0] lft_spd,
+    output logic [11:0] rght_spd
 );
 
+    logic at_hdng_nf;
+    logic [11:0] lft_spd_nf, rght_spd_nf;
 
     // Saturate error to 10 bits
     wire signed [11:0] error;
-    wire signed [9:0] err_sat;
+
+    logic signed [9:0] err_sat;
+    wire signed [9:0]  err_sat_nf;
     assign error = actl_hdng - dsrd_hdng;
-    assign err_sat = error[11] ? (&(error[10:9]) ? {1'b1, error[8:0]} : 10'b1000000000)  // negative 
+    assign err_sat_nf = error[11] ? (&(error[10:9]) ? {1'b1, error[8:0]} : 10'b1000000000)  // negative 
                            : (|(error[10:9]) ? 10'b0111111111 : {1'b0, error[8:0]}); // positive
     
+    always_ff @( posedge clk, negedge rst_n ) begin
+        if (!rst_n) err_sat <= 0;
+        else err_sat <= err_sat_nf;
+    end
+
     // assign at_hdng = dsrd_hdng == actl_hdng;
-    assign at_hdng = err_sat[9] ? ~err_sat < 10'd29 : err_sat < 10'd30;
+    assign at_hdng_nf = err_sat[9] ? ~err_sat < 10'd29 : err_sat < 10'd30;
 
     wire signed [13:0] Pterm_out;
     wire signed [11:0] Iterm_out;
@@ -118,9 +126,20 @@ module PID(
 
     // left = speed + pid_out
     // right = speed - pid_out
-    assign lft_spd = moving ? (all_term_out + frwrd_spd) : 0;
-    assign rght_spd = moving ? (frwrd_spd - all_term_out) : 0;
+    assign lft_spd_nf = moving ? (all_term_out + frwrd_spd) : 0;
+    assign rght_spd_nf = moving ? (frwrd_spd - all_term_out) : 0;
 
+    always_ff @(posedge clk, negedge rst_n) begin
+        if (!rst_n) begin
+            lft_spd <= 0;
+            rght_spd <= 0;
+            at_hdng <= 0;
+        end else begin
+            lft_spd <= lft_spd_nf;
+            rght_spd <= rght_spd_nf;
+            at_hdng <= at_hdng_nf;            
+        end
+    end
 endmodule
 
 `default_nettype wire 

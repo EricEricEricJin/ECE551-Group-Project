@@ -3,6 +3,7 @@
 module IR_math 
     #(parameter NOM_IR = 12'h900)
 (
+    input wire clk, rst_n,
     input wire lft_opn, 
     input wire rght_opn,
     input wire [11:0] lft_IR,
@@ -10,7 +11,7 @@ module IR_math
     input wire signed [8:0] IR_Dtrm,
     input wire en_fusion,
     input wire signed [11:0] dsrd_hdng,
-    output wire signed [11:0] dsrd_hdng_adj
+    output logic signed [11:0] dsrd_hdng_adj
 );
 
 wire signed [11:0] l_r_diff, l_n_diff, n_r_diff;
@@ -32,7 +33,13 @@ assign x4_ext13_out = {{2{IR_Dtrm[8]}}, IR_Dtrm, 2'b0};
 wire signed [12:0] last_sum_in_1;
 assign last_sum_in_1 = (div32_ext13_out + x4_ext13_out) >> 1;
 
-assign dsrd_hdng_adj = en_fusion ? last_sum_in_1 + dsrd_hdng : dsrd_hdng;
+logic signed [11:0] dsrd_hdng_adj_nf;
+assign dsrd_hdng_adj_nf = en_fusion ? last_sum_in_1 + dsrd_hdng : dsrd_hdng;
+always_ff @(posedge clk, negedge rst_n) begin
+    if (!rst_n) dsrd_hdng_adj <= 0;
+    else dsrd_hdng_adj <= dsrd_hdng_adj_nf;
+end
+
 
 endmodule
 

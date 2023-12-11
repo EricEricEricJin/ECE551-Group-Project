@@ -46,3 +46,5 @@ report_area > MazeRunner_area.txt
 
 # Writes out the gate level verilog netlist
 write -format verilog MazeRunner -output MazeRunner.vg
+
+quit
