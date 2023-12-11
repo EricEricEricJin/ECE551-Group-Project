@@ -72,14 +72,14 @@ module navigate(clk,rst_n,strt_hdng,strt_mv,stp_lft,stp_rght,mv_cmplt,hdng_rdy,m
 	// FF strt_mv and strt_hdg
 logic strt_mv_ff, strt_hdng_ff;
 always_ff @(posedge clk, negedge rst_n) begin
-if (!rst_n) begin
-strt_mv_ff <= 0;
-strt_hdng_ff <= 0;
-end
-else begin
-	strt_mv_ff <= strt_mv;
-strt_hdng_ff <= strt_hdng;
-end
+	if (!rst_n) begin
+		strt_mv_ff <= 0;
+		strt_hdng_ff <= 0;
+	end
+	else begin
+		strt_mv_ff <= strt_mv;
+		strt_hdng_ff <= strt_hdng;
+	end
 end
 
     always_comb begin
@@ -97,7 +97,7 @@ end
             IDLE: begin
                 // << IDLE -> ACCL >>
                 // if (strt_mv_ff) begin
-		if (strt_mv) begin
+		if (strt_mv_ff) begin
                     init_frwrd = 1;
                     nxt_state = ACCL;
                 end

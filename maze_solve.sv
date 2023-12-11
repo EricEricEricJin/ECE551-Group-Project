@@ -31,11 +31,11 @@ always_ff @(posedge clk, negedge rst_n) begin
     if (!rst_n)
         dsrd_hdng <= PARAM_STARTUP_HDG;
     else if (turn_left)
-        dsrd_hdng <= dsrd_hdng + 12'h400;
+        dsrd_hdng <= dsrd_hdng + 12'h3FF;
     else if (turn_right)
-        dsrd_hdng <= dsrd_hdng - 12'h400;
+        dsrd_hdng <= dsrd_hdng - 12'h3FF;
     else if (turn_around) 
-	dsrd_hdng <= dsrd_hdng + 12'h800;
+	dsrd_hdng <= dsrd_hdng - 12'h7FF;
     // Assume 3FF and 400 have no difference
 end
 
@@ -61,10 +61,10 @@ always_comb begin
         IDLE: begin
             if (!cmd_md) begin
                 nxt_state = FWD;
+		strt_mv = 1;
             end
         end
         FWD: begin
-	    strt_mv = 1;
             if (sol_cmplt) begin
                 nxt_state = IDLE;
             end
