@@ -282,7 +282,67 @@ module MazeRunner_tb();
 			disable timeout;
 		end
 	join
-	$display("maze solved in the correct order!!");
+	$display("maze solved in the correct order (left affinity)!!");
+	// Reset back to the starting position
+	iPHYS.xx = 15'h2800;
+	iPHYS.yy = 15'h800;
+    	RST_n = 0;
+	repeat(2) @(posedge clk) RST_n = 1;
+	
+	// wait for some time
+	repeat(10000) @(posedge clk);
+	
+	// send calibration cmd, check to make sure that the calabration was sucessful
+	cmd = 16'h0000;
+	send_cmd = 1;
+	@(posedge clk) send_cmd = 0;
+	fork
+		begin: rght_cal_timeout
+			repeat(1500000) @(posedge clk);
+			$display("ERR: timed out waiting for cal_done");
+			$stop();
+		end
+		begin
+			@(posedge iDUT.iNEMO.cal_done);
+			$display("Calibration completed successfully!");
+			disable rght_cal_timeout;
+		end
+	join
+	// check to make sure that the cmd was ack'd
+	fork
+		begin: rght_ack_timeout
+			repeat(1500000) @(posedge clk);
+			$display("ERR: timed out waiting for postive ack");
+			$stop();
+		end
+		begin
+			@(posedge resp_rdy);
+			if(resp == 8'ha5) begin
+				$display("cmd was acknowledged correctly!");
+			end else begin
+				$display("cmd was incorrectly acknowledged, should have been 8'ha5 but was 8'h%h", resp);
+			end
+			disable rght_ack_timeout;
+		end
+	join
+	// send er'
+	cmd = 16'h6001;
+	send_cmd = 1;
+	@(posedge clk) send_cmd = 0;
+	// check for solve complete, as well as making sure the robot navigates the maze correctly
+	fork
+		begin: rght_sol_timeout
+			repeat(1500000) @(posedge clk);
+			$display("ERR: timed out waiting for sol_timeout");
+			$stop();
+		end
+		begin
+			@(posedge iDUT.iSLV.sol_cmplt);
+			$display("sol_timeout completed successfully!");
+			disable rght_sol_timeout;
+		end
+	join
+	$display("maze solved in the correct order (right affinity)!!");
 	$stop();
   end
   
