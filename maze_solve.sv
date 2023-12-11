@@ -31,11 +31,11 @@ always_ff @(posedge clk, negedge rst_n) begin
     if (!rst_n)
         dsrd_hdng <= PARAM_STARTUP_HDG;
     else if (turn_left)
-        dsrd_hdng <= dsrd_hdng + 12'h3FF;
+        dsrd_hdng <= dsrd_hdng + 12'h400;
     else if (turn_right)
-        dsrd_hdng <= dsrd_hdng - 12'h3FF;
+        dsrd_hdng <= dsrd_hdng - 12'h400;
     else if (turn_around) 
-	dsrd_hdng <= dsrd_hdng - 12'h7FF;
+	dsrd_hdng <= dsrd_hdng - 12'h800;
     // Assume 3FF and 400 have no difference
 end
 

@@ -215,10 +215,10 @@ module MazeRunner_tb();
 				$stop();
 			end
 			$display("x position test 7 passed!");
-			//if(iPHYS.yy > 15'h2950 || iPHYS.yy < 15'h25B0) begin
-				//$display("y value is incorrect it should be between 15'h2950 and 15'h26B0 but was 15'h%h", iPHYS.yy);
-				//$stop();
-			//end
+			if(iPHYS.yy > 15'h2a00 || iPHYS.yy < 15'h25B0) begin
+				$display("y value is incorrect it should be between 15'h2a00 and 15'h26B0 but was 15'h%h", iPHYS.yy);
+				$stop();
+			end
 			$display("y position test 7 passed!");
 			if($signed(iPHYS.heading_robot[19:8]) > $signed(-12'h350) || $signed(iPHYS.heading_robot[19:8]) < $signed(-12'h450)) begin
 				$display("heading value is incorrect it should be between -12'h350 and -12'h450 but was 15'h%h", iPHYS.heading_robot[19:8]);
@@ -232,10 +232,10 @@ module MazeRunner_tb();
 				$stop();
 			end
 			$display("x position test 8 passed!");
-			//if(iPHYS.yy > 15'h2950 || iPHYS.yy < 15'h26B0) begin
-				//$display("y value is incorrect it should be between 15'h2950 and 15'h26B0 but was 15'h%h", iPHYS.yy);
-				//$stop();
-			//end
+			if(iPHYS.yy > 15'h2a00 || iPHYS.yy < 15'h26B0) begin
+				$display("y value is incorrect it should be between 15'h2a00 and 15'h26B0 but was 15'h%h", iPHYS.yy);
+				$stop();
+			end
 			$display("y position test 8 passed!");
 			if(iPHYS.heading_robot[19:8] > 12'h81F || iPHYS.heading_robot[19:8] < 12'h7DF) begin
 				$display("heading value is incorrect it should be between 12'h81F and 12'h7DF but was 15'h%h", iPHYS.heading_robot[19:8]);

@@ -5,7 +5,7 @@ module Pterm (
     output wire signed [13:0] P_term
 );
 
-    localparam P_coeff = 4'h3;
+    localparam P_coeff = 4'h7;
     assign P_term = $signed(P_coeff) * err_sat;
 
 endmodule
@@ -64,7 +64,7 @@ module Dterm (
     output wire signed [12:0] D_term
 );
 
-    localparam D_COEFF = 5'h0E;
+    localparam D_COEFF = 5'h09;
     
     wire signed [9:0] locker_1_out, locker_2_out;
     mux_ff_locker i_locker_1(.clk(clk), .rst_n(rst_n), .hdng_vld(hdng_vld), .in(err_sat), .out(locker_1_out));
@@ -83,17 +83,17 @@ module PID(
     input wire clk,
     input wire rst_n,
     input wire moving,
-    input wire [11:0] dsrd_hdng,
-    input wire [11:0] actl_hdng,
+    input wire signed [11:0] dsrd_hdng,
+    input wire signed [11:0] actl_hdng,
     input wire hdng_vld,
-    input wire [10:0] frwrd_spd,
+    input wire signed [10:0] frwrd_spd,
     output logic at_hdng,
-    output logic [11:0] lft_spd,
-    output logic [11:0] rght_spd
+    output logic signed [11:0] lft_spd,
+    output logic signed [11:0] rght_spd
 );
 
     logic at_hdng_nf;
-    logic [11:0] lft_spd_nf, rght_spd_nf;
+    logic signed [11:0] lft_spd_nf, rght_spd_nf;
 
     // Saturate error to 10 bits
     wire signed [11:0] error;
@@ -109,7 +109,7 @@ module PID(
         else err_sat <= err_sat_nf;
     end
 
-    // assign at_hdng = dsrd_hdng == actl_hdng;
+    // assign at_hdng_nf = dsrd_hdng == actl_hdng;
     assign at_hdng_nf = err_sat[9] ? ~err_sat < 10'd29 : err_sat < 10'd30;
 
     wire signed [13:0] Pterm_out;

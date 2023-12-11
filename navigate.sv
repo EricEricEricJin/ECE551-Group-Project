@@ -69,7 +69,15 @@ module navigate(clk,rst_n,strt_hdng,strt_mv,stp_lft,stp_rght,mv_cmplt,hdng_rdy,m
                         11'h000;
 
     // << Your implementation of ancillary circuits and SM >>	
-	// FF strt_mv and strt_hdg
+logic at_hdng_ff, at_hdng_rise;
+always_ff@(posedge clk, negedge rst_n) begin
+	if(!rst_n) at_hdng_ff <= 0;
+	else at_hdng_ff <= at_hdng;
+end
+
+assign at_hdng_rise = !at_hdng_ff & at_hdng;
+
+// FF strt_mv and strt_hdg
 logic strt_mv_ff, strt_hdng_ff;
 always_ff @(posedge clk, negedge rst_n) begin
 	if (!rst_n) begin
@@ -114,7 +122,7 @@ end
                 moving = 1;
 
                 // << HEAD -> IDLE >>
-                if (at_hdng) begin
+                if (at_hdng_rise) begin
                     	nxt_state = IDLE;
 			mv_cmplt = 1;
                 end
