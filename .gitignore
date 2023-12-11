@@ -2,3 +2,6 @@
 !*.sv
 !.gitignore
 !wave.do
+!*.vg
+!*.dc
+!*.txt

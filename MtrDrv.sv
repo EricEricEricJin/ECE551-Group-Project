@@ -10,7 +10,7 @@ output logic rghtPWM1,
 output logic rghtPWM2);
 
 logic signed [11:0] lft_spd_ff, rght_spd_ff;
-always_ff @(posedge clk, negedge rst_n) begin : blockName
+always_ff @(posedge clk, negedge rst_n) begin
 	if (!rst_n) begin
 		lft_spd_ff <= 0;
 		rght_spd_ff <= 0;
