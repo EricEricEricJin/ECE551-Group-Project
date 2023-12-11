@@ -1,6 +1,8 @@
-read_file -format sverilog {A2D_intf.sv, inertial_integrator.sv, PID.sv, \
-	UART_rx.sv, inert_intf.sv, maze_solve.sv, piezo_drv.sv, sensor_intf.sv, UART.sv, cmd_proc.sv, IR_Math.sv, \
-	MtrDrv.sv, PWM8.sv, UART_tx.sv, MazeRunner.sv, navigate.sv, reset_synch.sv, UART_Wrapper.sv }
+read_file -format sverilog { \
+	A2D_intf.sv, cmd_proc.sv, DutyScaleROM.sv, inertial_integrator.sv, inert_intf.sv,				\
+	IR_Math.sv,	MazeRunner.sv, maze_solve.sv, MtrDrv.sv, navigate.sv, 								\
+	PID.sv,	piezo_drv.sv, PWM12.sv,	PWM8.sv, reset_synch.sv,					 					\
+	sensor_intf.sv,	SPI_ADC128S.sv, SPI_mnrch.sv, UART_rx.sv, UART.sv, UART_tx.sv, UART_Wrapper.sv 	}
 
 set current_design MazeRunner
 link

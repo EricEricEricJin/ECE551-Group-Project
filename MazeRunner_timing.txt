@@ -1,4 +1,3 @@
-Warning: Design 'MazeRunner' has '3' unresolved references. For more detailed information, use the "link" command. (UID-341)
 Information: Updating design information... (UID-85)
  
 ****************************************
@@ -8,15 +7,15 @@ Report : timing
         -max_paths 1
 Design : MazeRunner
 Version: U-2022.12-SP4
-Date   : Mon Dec 11 11:16:39 2023
+Date   : Mon Dec 11 14:34:12 2023
 ****************************************
 
 Operating Conditions: tt0p85v25c   Library: saed32lvt_tt0p85v25c
 Wire Load Model Mode: enclosed
 
-  Startpoint: iNEMO/yawL_reg[0]
+  Startpoint: iIR/iDRV/cnt_reg[0]
               (rising edge-triggered flip-flop clocked by clk)
-  Endpoint: iNEMO/iINT/yaw_comp_reg[0]
+  Endpoint: iIR/iDRV/cnt_reg[0]
             (rising edge-triggered flip-flop clocked by clk)
   Path Group: clk
   Path Type: min
@@ -25,29 +24,28 @@ Wire Load Model Mode: enclosed
   ------------------------------------------------
   MazeRunner         16000                 saed32lvt_tt0p85v25c
 
-  Point                                               Incr       Path
-  ----------------------------------------------------------------------
-  clock clk (rise edge)                               0.00       0.00
-  clock network delay (ideal)                         0.00       0.00
-  iNEMO/yawL_reg[0]/CLK (DFFARX1_LVT)                 0.00       0.00 r
-  iNEMO/yawL_reg[0]/QN (DFFARX1_LVT)                  0.07       0.07 r
-  iNEMO/iINT/yaw_comp_reg[0]/SETB (DFFSSRX1_LVT)      0.01       0.08 r
-  data arrival time                                              0.08
+  Point                                      Incr       Path
+  -------------------------------------------------------------
+  clock clk (rise edge)                      0.00       0.00
+  clock network delay (ideal)                0.00       0.00
+  iIR/iDRV/cnt_reg[0]/CLK (DFFARX1_LVT)      0.00       0.00 r
+  iIR/iDRV/cnt_reg[0]/QN (DFFARX1_LVT)       0.06       0.06 f
+  iIR/iDRV/cnt_reg[0]/D (DFFARX1_LVT)        0.01       0.07 f
+  data arrival time                                     0.07
 
-  clock clk (rise edge)                               0.00       0.00
-  clock network delay (ideal)                         0.00       0.00
-  iNEMO/iINT/yaw_comp_reg[0]/CLK (DFFSSRX1_LVT)       0.00       0.00 r
-  library hold time                                   0.02       0.02
-  data required time                                             0.02
-  ----------------------------------------------------------------------
-  data required time                                             0.02
-  data arrival time                                             -0.08
-  ----------------------------------------------------------------------
-  slack (MET)                                                    0.06
+  clock clk (rise edge)                      0.00       0.00
+  clock network delay (ideal)                0.00       0.00
+  iIR/iDRV/cnt_reg[0]/CLK (DFFARX1_LVT)      0.00       0.00 r
+  library hold time                         -0.01      -0.01
+  data required time                                   -0.01
+  -------------------------------------------------------------
+  data required time                                   -0.01
+  data arrival time                                    -0.07
+  -------------------------------------------------------------
+  slack (MET)                                           0.08
 
 
 1
-Warning: Design 'MazeRunner' has '3' unresolved references. For more detailed information, use the "link" command. (UID-341)
  
 ****************************************
 Report : timing
@@ -56,15 +54,15 @@ Report : timing
         -max_paths 1
 Design : MazeRunner
 Version: U-2022.12-SP4
-Date   : Mon Dec 11 11:16:39 2023
+Date   : Mon Dec 11 14:34:12 2023
 ****************************************
 
 Operating Conditions: tt0p85v25c   Library: saed32lvt_tt0p85v25c
 Wire Load Model Mode: enclosed
 
-  Startpoint: iCNTRL/i_Dterm/i_locker_2/out_reg[0]
+  Startpoint: iMTR/lft_spd_ff_reg[0]
               (rising edge-triggered flip-flop clocked by clk)
-  Endpoint: iCNTRL/rght_spd_reg[11]
+  Endpoint: iMTR/lft_scaled_ff_reg[9]
             (rising edge-triggered flip-flop clocked by clk)
   Path Group: clk
   Path Type: max
@@ -73,61 +71,62 @@ Wire Load Model Mode: enclosed
   ------------------------------------------------
   MazeRunner         16000                 saed32lvt_tt0p85v25c
 
-  Point                                                           Incr       Path
-  ----------------------------------------------------------------------------------
-  clock clk (rise edge)                                           0.00       0.00
-  clock network delay (ideal)                                     0.00       0.00
-  iCNTRL/i_Dterm/i_locker_2/out_reg[0]/CLK (DFFARX1_LVT)          0.00       0.00 r
-  iCNTRL/i_Dterm/i_locker_2/out_reg[0]/Q (DFFARX1_LVT)            0.09       0.09 f
-  U2138/Y (NAND2X0_LVT)                                           0.05       0.15 r
-  iCNTRL/i_Dterm/sub_74/U2_1/CO (FADDX1_LVT)                      0.09       0.23 r
-  iCNTRL/i_Dterm/sub_74/U2_2/CO (FADDX1_LVT)                      0.08       0.32 r
-  iCNTRL/i_Dterm/sub_74/U2_3/CO (FADDX1_LVT)                      0.08       0.40 r
-  iCNTRL/i_Dterm/sub_74/U2_4/CO (FADDX1_LVT)                      0.08       0.48 r
-  iCNTRL/i_Dterm/sub_74/U2_5/CO (FADDX1_LVT)                      0.08       0.56 r
-  iCNTRL/i_Dterm/sub_74/U2_6/CO (FADDX1_LVT)                      0.08       0.64 r
-  iCNTRL/i_Dterm/sub_74/U2_7/CO (FADDX1_LVT)                      0.09       0.73 r
-  U2137/Y (OR2X1_LVT)                                             0.05       0.78 r
-  U2136/Y (AO22X1_LVT)                                            0.05       0.83 r
-  U2068/Y (OR2X1_LVT)                                             0.05       0.88 r
-  U2067/Y (AO22X1_LVT)                                            0.05       0.93 r
-  iCNTRL/i_Dterm/sub_74/U2_10/Y (XOR3X2_LVT)                      0.06       0.99 r
-  U2893/Y (INVX0_LVT)                                             0.04       1.02 f
-  U2132/Y (AND2X1_LVT)                                            0.06       1.08 f
-  U2082/Y (AO21X1_LVT)                                            0.06       1.14 f
-  U2081/Y (NAND2X0_LVT)                                           0.05       1.20 r
-  U2616/Y (OA21X1_LVT)                                            0.05       1.25 r
-  U2510/Y (XOR2X1_LVT)                                            0.09       1.33 f
-  iCNTRL/i_Dterm/mult_79/S2_3_4/S (FADDX1_LVT)                    0.12       1.45 r
-  U2615/Y (XOR2X1_LVT)                                            0.09       1.54 f
-  iCNTRL/i_Dterm/mult_79/S14_7_0/S (FADDX1_LVT)                   0.11       1.65 r
-  U2511/Y (INVX1_LVT)                                             0.03       1.68 f
-  U2456/Y (XNOR3X1_LVT)                                           0.14       1.82 r
-  U2125/Y (OR2X1_LVT)                                             0.05       1.87 r
-  U2124/Y (AO22X1_LVT)                                            0.05       1.92 r
-  iCNTRL/add_0_root_add_0_root_add_125_2/U1_8/S (FADDX1_LVT)      0.11       2.03 f
-  U2717/Y (INVX1_LVT)                                             0.04       2.07 r
-  iCNTRL/sub_130/U2_5/CO (FADDX1_LVT)                             0.09       2.16 r
-  iCNTRL/sub_130/U2_6/CO (FADDX1_LVT)                             0.08       2.25 r
-  iCNTRL/sub_130/U2_7/CO (FADDX1_LVT)                             0.08       2.33 r
-  iCNTRL/sub_130/U2_8/CO (FADDX1_LVT)                             0.08       2.41 r
-  iCNTRL/sub_130/U2_9/CO (FADDX1_LVT)                             0.08       2.49 r
-  iCNTRL/sub_130/U2_10/CO (FADDX1_LVT)                            0.08       2.57 r
-  U2894/Y (XNOR2X1_LVT)                                           0.09       2.66 r
-  U2026/Y (AND2X1_LVT)                                            0.04       2.70 r
-  iCNTRL/rght_spd_reg[11]/D (DFFARX1_LVT)                         0.01       2.71 r
-  data arrival time                                                          2.71
+  Point                                          Incr       Path
+  -----------------------------------------------------------------
+  clock clk (rise edge)                          0.00       0.00
+  clock network delay (ideal)                    0.00       0.00
+  iMTR/lft_spd_ff_reg[0]/CLK (DFFARX2_LVT)       0.00       0.00 r
+  iMTR/lft_spd_ff_reg[0]/Q (DFFARX2_LVT)         0.12       0.12 f
+  U1691/Y (AND2X1_LVT)                           0.08       0.20 f
+  U3484/Y (XNOR2X1_LVT)                          0.09       0.29 r
+  iMTR/mult_53/S2_2_9/S (FADDX1_LVT)             0.11       0.40 f
+  iMTR/mult_53/S2_3_8/S (FADDX1_LVT)             0.11       0.51 r
+  iMTR/mult_53/S2_4_7/S (FADDX1_LVT)             0.11       0.62 f
+  iMTR/mult_53/S2_5_6/S (FADDX1_LVT)             0.11       0.74 r
+  iMTR/mult_53/S2_6_5/S (FADDX1_LVT)             0.11       0.84 f
+  iMTR/mult_53/S2_7_4/S (FADDX1_LVT)             0.11       0.96 r
+  iMTR/mult_53/S2_8_3/S (FADDX1_LVT)             0.11       1.07 f
+  iMTR/mult_53/S2_9_2/CO (FADDX1_LVT)            0.08       1.15 f
+  U3264/Y (XNOR3X1_LVT)                          0.14       1.29 f
+  iMTR/mult_53/S4_1/S (FADDX1_LVT)               0.12       1.40 r
+  U3099/Y (XOR2X1_LVT)                           0.09       1.50 f
+  U1786/Y (AND3X1_LVT)                           0.06       1.55 f
+  U1783/Y (AO21X1_LVT)                           0.06       1.61 f
+  U1780/Y (AO21X1_LVT)                           0.05       1.67 f
+  U1778/Y (NAND2X0_LVT)                          0.04       1.71 r
+  U1776/Y (AO21X1_LVT)                           0.06       1.77 r
+  U1773/Y (NAND2X0_LVT)                          0.03       1.80 f
+  U1770/Y (AO21X1_LVT)                           0.06       1.86 f
+  U1768/Y (NAND2X0_LVT)                          0.05       1.91 r
+  U1766/Y (AO21X1_LVT)                           0.06       1.97 r
+  U3500/Y (NAND2X0_LVT)                          0.03       2.00 f
+  U3501/Y (AND2X1_LVT)                           0.05       2.04 f
+  U1758/Y (AOI21X1_LVT)                          0.07       2.11 r
+  U1755/Y (AO21X1_LVT)                           0.05       2.17 r
+  U1754/Y (AND3X1_LVT)                           0.06       2.22 r
+  U1713/Y (NAND2X0_LVT)                          0.05       2.27 f
+  U1710/Y (OR2X1_LVT)                            0.06       2.33 f
+  U2891/Y (INVX1_LVT)                            0.03       2.36 r
+  U1705/Y (AND2X1_LVT)                           0.04       2.40 r
+  U1703/Y (NAND2X0_LVT)                          0.03       2.44 f
+  U2890/Y (OR2X1_LVT)                            0.06       2.49 f
+  U2893/Y (OR2X1_LVT)                            0.05       2.55 f
+  U2892/Y (XOR2X1_LVT)                           0.08       2.63 r
+  U1696/Y (AO21X1_LVT)                           0.05       2.68 r
+  iMTR/lft_scaled_ff_reg[9]/D (DFFARX1_LVT)      0.01       2.69 r
+  data arrival time                                         2.69
 
-  clock clk (rise edge)                                           2.75       2.75
-  clock network delay (ideal)                                     0.00       2.75
-  iCNTRL/rght_spd_reg[11]/CLK (DFFARX1_LVT)                       0.00       2.75 r
-  library setup time                                             -0.03       2.72
-  data required time                                                         2.72
-  ----------------------------------------------------------------------------------
-  data required time                                                         2.72
-  data arrival time                                                         -2.71
-  ----------------------------------------------------------------------------------
-  slack (MET)                                                                0.01
+  clock clk (rise edge)                          2.75       2.75
+  clock network delay (ideal)                    0.00       2.75
+  iMTR/lft_scaled_ff_reg[9]/CLK (DFFARX1_LVT)
+                                                 0.00       2.75 r
+  library setup time                            -0.03       2.72
+  data required time                                        2.72
+  -----------------------------------------------------------------
+  data required time                                        2.72
+  data arrival time                                        -2.69
+  -----------------------------------------------------------------
+  slack (MET)                                               0.03
 
 
 1

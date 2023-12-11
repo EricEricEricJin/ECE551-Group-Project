@@ -30,6 +30,20 @@ logic signed [23:0] lft_div, rght_div;
 
 
 DutyScaleROM iROM(.clk(clk), .batt_level(vbatt[9:4]), .scale(scale_factor));
+
+// Flip flop scaled
+logic signed [11:0] lft_scaled_ff, rght_scaled_ff;
+always_ff @(posedge clk, negedge rst_n) begin
+	if (!rst_n) begin
+		lft_scaled_ff <= 0;
+		rght_scaled_ff <= 0;
+	end	
+	else begin
+		lft_scaled_ff <= lft_scaled;
+		rght_scaled_ff <= rght_scaled;
+	end
+end
+
 // PWM12 PWMRight(.clk(clk), .rst_n(rst_n), .duty(rightDuty), .PWM1(rghtPWM1_nf), .PWM2(rghtPWM2_nf));
 // PWM12 PWMLeft(.clk(clk), .rst_n(rst_n), .duty(leftDuty), .PWM1(lftPWM1_nf), .PWM2(lftPWM2_nf));
 
@@ -44,9 +58,10 @@ assign lft_scaled = lft_div[23] ? (&lft_div[21:11] ? lft_div[11:0] : 12'h800) :
 assign rght_scaled = rght_div[23] ? (&rght_div[21:11] ? rght_div[11:0] : 12'h800) :
 				    (~|rght_div[21:11] ? rght_div[11:0] : 12'h7FF);
 
-assign rightDuty = 12'h800 - rght_scaled;
-assign leftDuty = lft_scaled + 12'h800;
+assign rightDuty = 12'h800 - rght_scaled_ff;
+assign leftDuty = lft_scaled_ff + 12'h800;
 
+// // Flip flop PWM output
 // always_ff @( posedge clk, negedge rst_n ) begin
 // 	if (!rst_n) begin
 // 		lftPWM1 <= 0;
