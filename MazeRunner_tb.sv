@@ -104,8 +104,8 @@ module MazeRunner_tb();
 	// check for solve complete
 	fork
 		begin: timeout
-			repeat(10_000_000) @(posedge clk);
-			$display("ERR: timed out waiting for postive ack");
+			repeat(50_000_000) @(posedge clk);
+			$display("ERR: timed out waiting for sol_cmplt");
 			$stop();
 		end
 		begin

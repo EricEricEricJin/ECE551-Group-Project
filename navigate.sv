@@ -115,8 +115,8 @@ end
 
                 // << HEAD -> IDLE >>
                 if (at_hdng) begin
-                    mv_cmplt = 1;
-                    nxt_state = IDLE;
+                    	nxt_state = IDLE;
+			mv_cmplt = 1;
                 end
 
             end
@@ -141,8 +141,8 @@ end
                 dec_frwrd = 1;
                 // << DECNormal -> IDLE >>
                 if (frwrd_spd == 0) begin
-                    mv_cmplt = 1;
-                    nxt_state = IDLE;
+                    	nxt_state = IDLE;
+			mv_cmplt = 1;
                 end
             end
             
