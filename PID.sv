@@ -5,7 +5,7 @@ module Pterm (
     output wire signed [13:0] P_term
 );
 
-    localparam P_coeff = 4'h7;
+    localparam P_coeff = 4'h3;
     assign P_term = $signed(P_coeff) * err_sat;
 
 endmodule
@@ -64,7 +64,7 @@ module Dterm (
     output wire signed [12:0] D_term
 );
 
-    localparam D_COEFF = 5'h09;
+    localparam D_COEFF = 5'h0e;
     
     wire signed [9:0] locker_1_out, locker_2_out;
     mux_ff_locker i_locker_1(.clk(clk), .rst_n(rst_n), .hdng_vld(hdng_vld), .in(err_sat), .out(locker_1_out));
