@@ -20,17 +20,19 @@ output logic cmd_md);
 typedef enum logic[2:0] { IDLE, READ_CMD, CAL, HEAD, MOVE, SOLVE} state_t;
 
 // holding register for dsrd_hdng
+logic capture_hdng;
 always_ff @(posedge clk, negedge rst_n) begin
 	if(!rst_n) dsrd_hdng <= 0;
-	else dsrd_hdng <= cmd[11:0];
+	else if(capture_hdng) dsrd_hdng <= cmd[11:0];
 end
 
 // holding register for both stp_lft, stp_rght
+logic capture_stp;
 always_ff@(posedge clk, negedge rst_n) begin
 	if(!rst_n) begin
 		stp_lft <= 0;
 		stp_rght <= 0;
-	end else begin
+	end else if(capture_stp) begin
 		stp_lft <= cmd[1];
 		stp_rght <= cmd[0];
 	end
@@ -52,6 +54,8 @@ always_comb begin
 	send_resp = 0;
 	strt_hdng = 0;
 	strt_mv = 0;
+	capture_hdng = 0;
+	capture_stp = 0;
 	cmd_md = 1;
 	nxt_state = state;
 	case(state)
@@ -63,9 +67,11 @@ always_comb begin
 				nxt_state = CAL;
 			  end else if(cmd[15:13] == 3'b001) begin
 				strt_hdng = 1;
+				capture_hdng = 1;
 				nxt_state = HEAD;
 			  end else if(cmd[15:13] == 3'b010) begin
-				strt_mv = 1; 
+				strt_mv = 1;
+				capture_stp = 1;
 				nxt_state = MOVE;
 			  end else if(cmd[15:13] == 3'b011) begin
 				cmd_md = 0;
